@@ -120,13 +120,15 @@ public class ColvinKHash {
 		return total;
 	}
 	public static int maxValue(String[] parts){
-		int currentChar = 0;
+		int currentChar;
 		int max = 0;
 		
 		for(String part:parts){
-			if((!isOperator(part)) && (currentChar >= max)){
+			if(!isOperator(part)){
 				currentChar = Integer.parseInt(part);
-				max = currentChar;
+				if (currentChar >= max) {
+					max = currentChar;	
+				}
 			}
 		}
 		
@@ -217,7 +219,6 @@ public class ColvinKHash {
 		System.out.print("Enter the key: ");
 		//in.next();
 		key = in.nextLine();
-		System.out.print(key);
 		maxKeyCapacity = key.length();
 		
 		initialize();
