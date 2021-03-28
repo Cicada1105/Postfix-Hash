@@ -175,10 +175,29 @@ public class ColvinKHash {
 			resize(maxKey);
 		}
 		
+		/* 
+			If the length of the max indice in the postfix expression is
+			greater than the length of the input string, replace each indice 
+			in expression by modding itself with length of input string
+			
+			ex.
+				string length = 3;
+				max key = 6
+				indices before modding
+				{0,1,2,3,4,5}
+				indice % max key 
+				indices after modding 
+				{0,1,2,0,1,2}
+		*/
 		//Will replace the indices in the key with the respective ASCII codes
 		for(int r = 0; r < maxKeyCapacity; r++){
 			if(!isOperator(keyParts[r])){
-				keyParts[r] = strCodes[Integer.parseInt(keyParts[r])] + "";
+				if (maxKey > maxCapacity) {
+					keyParts[r] = strCodes[Integer.parseInt(keyParts[r]) % maxCapacity] + "";	
+				}
+				else {
+					keyParts[r] = strCodes[Integer.parseInt(keyParts[r])] + "";
+				}
 			}
 		}
 		
