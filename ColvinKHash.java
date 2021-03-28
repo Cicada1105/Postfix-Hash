@@ -1,8 +1,17 @@
-//Josh Colvin
-
+/*
+	All code written around the time of 2018-05-02
+	unless explicitly stated otherwise in comments
+	or in JavaDoc @since tag
+*/
 //imports
 import java.util.Scanner;
 
+/**
+* This class implements the postfix expression to calculate a "hash" of a passed in string.
+*
+* @author Josh Colvin
+* @since 2018-05-02
+*/
 public class ColvinKHash {
 	//Holds the information for the hash key
 	private static int[] stack; 
@@ -12,6 +21,12 @@ public class ColvinKHash {
 	private static int[] strCodes; 
 	private static int maxCapacity;
 	
+	/**
+	* Repeats passed in symbol a fixed number of times. Used as a visual divider on the command line/terminal.
+	* 
+	* @param symbol The symbol(s) to be displayed as a divider
+	* @param num Number of times symbol is drawn in a line to the screen
+	*/
 	private static void printBuffer(String symbol,int num){
 		
 		for(int r = 1; r <= num; r++){
@@ -19,6 +34,16 @@ public class ColvinKHash {
 		}
 		
 	}
+	
+	/**
+	* A method that takes a string and formats it according 
+	* to the column length passed as a second argument. 
+	* Whitespaces are added based on that second argument. 
+	* 
+	* @param str String to be formatted 
+	* @param colLength Length of formatted string 
+	* @return Formatted string 
+	*/
 	//The following is previous code I had written to practice calling a function for formating a title
 	//Takes in a string and the desired column length
 	//Depending on whether the string is odd or even, the function will adapt accordingly
@@ -60,6 +85,16 @@ public class ColvinKHash {
 		}
 		return updatedStr;
 	}
+	
+	/**
+	* This method is for handling the visual formatting 
+	* of a title and a symbol divider placed above and 
+	* below to create a distinguished.
+	* 
+	* @param phrase String to be displayed as title 
+	* @param symbol Symbol to act as divider for title 
+	* @param num Length or number of symbols to display above and below title
+	*/
 	public static void printTitle(String phrase,String symbol,int num){
 		
 		printBuffer(symbol,num);
@@ -70,21 +105,56 @@ public class ColvinKHash {
 		System.out.printf("\n");
 		
 	}
+	
+	/**
+	* Allows for viewing the topmost integer value 
+	* from the postfix expression stack without 
+	* removing it.
+	* 
+	* @return Integer value from the top of the postfix expression stack 
+	*/
 	public static int peekCodes(){
 		return stack[top];
 	}
+	
+	/**
+	* Resets the postfix expressoin stack pointer
+	* so that any new values added to stack will
+	* overwrite old ones.
+	*/
 	public static void resetCodes(){
 		top = -1;
 	}
+	
+	/**
+	* Takes the passed in Integer value and adds it 
+	* to the top of the postfix expression stack.
+	* 
+	* @param val Integer value to add to the postfix expression stack
+	*/
 	public static void pushCode(int val){
 		top++;//Initially at position -1;
 		stack[top] = val;
 	}
+	
+	/**
+	* Removes the topmost integer from the postfix 
+	* expression stack and returns it's value.
+	* 
+	* @return Integer value from the top of the postfix expression stack
+	*/
 	public static int pullCode(){
 		int currentTop = peekCodes();
 		top--;
 		return currentTop;
 	}
+	
+	/**
+	* A method for instantiating the array for holding 
+	* the codes, the stack for maintaining the postfix 
+	* calculations, and the starting position of the 
+	* stack: -1.
+	*/
 	//This function initializes the parameters for
 	// the "to be hashed" string
 	public static void initialize(){
@@ -92,6 +162,14 @@ public class ColvinKHash {
 		stack = new int[maxKeyCapacity];
 		top = -1;
 	}
+	
+	/**
+	* This method takes a string and returns if the passed 
+	* in argument is a valid, basic operation.
+	* 
+	* @param part A string to be tested 
+	* @return Whether part is one of the basic operations
+	*/
 	public static Boolean isOperator(String part){
 		if((part.equals("+")) || (part.equals("-")) || (part.equals("/")) || (part.equals("*")) || (part.equals("%"))){
 			return true;
@@ -100,6 +178,16 @@ public class ColvinKHash {
 			return false;
 		}
 	}
+	
+	/**
+	* Method that takes two numbers and operates on them
+	* specified by the operator parameter.
+	* 
+	* @param num1 First integer numbers to be operated on 
+	* @param num2 Second integer numbers to be operated on 
+	* @param operator Operation to execute on the two passed in ASCII numbers 
+	* @return Value resulting from num1 and num2 being operated on 
+	*/
 	public static int evaluate(int num1, int num2, String operator){
 		int total = 0;
 		if(operator.equals("+")){
@@ -119,12 +207,28 @@ public class ColvinKHash {
 		}
 		return total;
 	}
+	
+	/**
+	* Finds and returns the largest integer value of 
+	* the string array of ASCII codes passed in as 
+	* an argument.
+	* 
+	* @param parts String array of ASCII codes to be searched through 
+	* @return Maximum integer value found within string array after parsing 
+	* @since 2021-03-28
+	*/
 	public static int maxValue(String[] parts){
 		int currentChar;
 		int max = 0;
 		
 		for(String part:parts){
 			if(!isOperator(part)){
+				/* 
+					Previously incorrectly stored currentChar and max within same block 
+					after checking initial 0 >= 0. Resulted in currentChar and max 
+					always being equal. Max became equal to last indice in postfix 
+					expression which is not always true 
+				*/
 				currentChar = Integer.parseInt(part);
 				if (currentChar >= max) {
 					max = currentChar;	
@@ -134,6 +238,13 @@ public class ColvinKHash {
 		
 		return max;
 	}
+	
+	/**
+	* Stores ASCII code values of inputted string into a 
+	* new array of length specified by integer parameter.
+	* 
+	* @param arrayLength The length of the new array containing the inputted string codes 
+	*/
 	public static void resize(int arrayLength){
 		int[] newCodeArray = new int[arrayLength];
 		for(int i = 0;i < arrayLength; i++){
@@ -142,11 +253,34 @@ public class ColvinKHash {
 		strCodes = newCodeArray;
 		maxCapacity = arrayLength;
 	}
+	
+	/**
+	* This method divides each ASCII code of inputted string 
+	* by predetermined number. This method is called when 
+	* the number of characters in the inputted string is 
+	* greater than the max indice of the inputted postfix
+	* expression.
+	* 
+	* @param avgDivisor Number to divide each inputted string codes by
+	*/
 	public static void average(int avgDivisor){
 		for(int i = 0;i < maxCapacity; i++){
 			strCodes[i] = strCodes[i] / avgDivisor;
 		}
 	}
+	
+	/**
+	* A method that turns the characters, of the passed in 
+	* string, into ASCII codes. The codes are then replaced 
+	* by the respective indice values contained in the postfix 
+	* expression parameter "key". The calulations are 
+	* then executed based on the expression, and the final 
+	* result is returned.
+	* 
+	* @param s Plain text string to be hashed 
+	* @param key String containing the postfix expression
+	* @return Integer value calculated by running parameter "s" through postfix parameter "key" 
+	*/
 	public static int KHash(String s,String key){
 		char[] chrs = s.toCharArray(); 
 		String[] keyParts = key.split("");
@@ -161,10 +295,12 @@ public class ColvinKHash {
 			strCodes[i] = (int)chrs[i]%128;
 		}
 		
-		//If the length of the characters of the string is greater than
-		//the max key, minimize the array to only include significant
-		//indices then average
-		//the greatest index key + 1
+		/*
+			If the length of the characters of the string is greater than
+			the max key, minimize the array to only include significant
+			indices then average
+			the greatest index key + 1
+		*/
 		if(maxCapacity > maxKey) {
 			for (int r = maxKey; r < maxCapacity; r++){
 				strCodes[r % maxKey] += strCodes[r];
@@ -192,6 +328,7 @@ public class ColvinKHash {
 		//Will replace the indices in the key with the respective ASCII codes
 		for(int r = 0; r < maxKeyCapacity; r++){
 			if(!isOperator(keyParts[r])){
+				// Updated on 28 March 2021 to include "if" statement 
 				if (maxKey > maxCapacity) {
 					keyParts[r] = strCodes[Integer.parseInt(keyParts[r]) % maxCapacity] + "";	
 				}
